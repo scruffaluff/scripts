@@ -1108,7 +1108,7 @@ def setup-guest [] {
             } | transpose key value) {
                 let lines = open "/boot/loader.conf"
                 | lines
-                | where {|line| not ($line | str contains $"($option.key)=")}
+                | where { not ($in | str contains $"($option.key)=") }
 
                 let content = [...$lines $'($option.key)="($option.value)"']
                 | str join "\n"
@@ -1326,7 +1326,7 @@ def setup-host [] {
 
     create-key
     let programs = ["tscp" "tssh"]
-    | where {|program| which $program | is-empty }
+    | where { which $in | is-empty }
     if ($programs | is-not-empty) {
         http get https://scruffaluff.github.io/picoware/install/script.nu
         | nu --commands $in --global ($programs | str join ' ')

@@ -77,7 +77,7 @@ def "main edit" [
     --store (-s): path = "" # Store path override
     path: path # Input path
 ] {
-    let store = open (path-store) | from json
+    let store = open (path-store)
 
     if "editor" in $store {
         let command = list-panes
@@ -97,7 +97,6 @@ def "main edit" [
         $store
         | upsert editor ($env.ZELLIJ_PANE_ID | into int)
         | save --force (path-store)
-        open --raw (path-store) | save --append $"($nu.home-dir)/zhy.log"
         exec hx $path
     }
 }

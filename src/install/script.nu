@@ -50,10 +50,10 @@ def find-completions [version: string = "main"] {
         | get tree
         | where type == blob
         | get path
-        | where {|path| ($path | str starts-with "src/completion/") }
+        | where { $in | str starts-with "src/completion/" }
     }
-    | where {|name| ($name | path parse | get extension) in $exts }
-    | each {|name| $name | path basename }
+    | where { ($in | path parse | get extension) in $exts }
+    | path basename
 }
 
 # Find all installable scripts inside repository.
@@ -71,10 +71,10 @@ def find-scripts [version: string = "main"] {
         | get tree
         | where type == blob
         | get path
-        | where {|path| $path | str starts-with "src/script/" }
+        | where {$in | str starts-with "src/script/" }
     }
-    | where {|name| ($name | path parse | get extension) in $exts }
-    | each {|name| $name | path basename }
+    | where { ($in | path parse | get extension) in $exts }
+    | path basename
 }
 
 # Find command to elevate as super user.
@@ -144,7 +144,7 @@ def install-completion [
     let quiet = $env.SCRIPTS_NOLOG? | into bool --relaxed
     let name = $script | path parse | get stem
     let completions = find-completions $version
-    | where {|file| ($file | path parse | get stem) == $name }
+    | where { ($in | path parse | get stem) == $name }
 
     let source = if ($version | path exists) {
         $"($version)/src/completion/($name)"
@@ -203,13 +203,13 @@ def install-script [
     }
     if $ext == "py" and (which uv | is-empty) {
         http get https://scruffaluff.github.io/picoware/install/uv.nu
-        | nu --commands $in --quiet ($args | str join ' ')
+        | nu --commands $in --quiet ...$args
     } else if $ext == "rs" and (which rust-script | is-empty) {
         http get https://scruffaluff.github.io/picoware/install/rust-script.nu
-        | nu --commands $in --quiet ($args | str join ' ')
+        | nu --commands $in --quiet ...$args
     } else if $ext in ["ts" "tsx"] and (which deno | is-empty) {
         http get https://scruffaluff.github.io/picoware/install/deno.nu
-        | nu --commands $in --quiet ($args | str join ' ')
+        | nu --commands $in --quiet ...$args
     }
 
     let program = if $nu.os-info.name == "windows" {
@@ -238,8 +238,7 @@ def install-script [
     }
 
     $env.PATH = [$dest ...$env.PATH]
-    let version = ^$name --version
-    log $"Installed ($version)."
+    log $"Installed (^$name --version)."
 }
 
 # Install wrapper script for Windows.
@@ -307,7 +306,6 @@ def main [
 
     let system = need-super $dest $global
     let super = if $system { find-super } else { "" }
-
     for script in $scripts {
         mut match = false
         for name in $names {

@@ -215,7 +215,7 @@ function SetupRunner($Name, $Script, $DestDir, $CliDir, $Url, $TargetEnv) {
 "$Runner" $Arguments %*
 "@
 
-    # Based on guide at
+    # Create Start Menu shortcut based on guide at
     # https://learn.microsoft.com/en-us/troubleshoot/windows-client/admin-development/create-desktop-shortcut-with-wsh.
     $WshShell = New-Object -ComObject WScript.Shell
     $Shortcut = $WshShell.CreateShortcut("$MenuDir\$Title.lnk")
