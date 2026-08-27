@@ -31,7 +31,7 @@ from typer import Option, Typer
 if TYPE_CHECKING:
     from collections.abc import Iterable
 
-__version__ = "0.1.1"
+__version__ = "0.1.2"
 
 cli = Typer(
     add_completion=False,
@@ -43,7 +43,9 @@ cli = Typer(
 # Use Rclone environment variables to avoid unsupported flags on specific versions.
 os.environ["RCLONE_COPY_LINKS"] = "true"
 os.environ["RCLONE_CREATE_EMPTY_SRC_DIRS"] = "true"
+os.environ["RCLONE_EXCLUDE_FROM"] = ""
 os.environ["RCLONE_HUMAN_READABLE"] = "true"
+os.environ["RCLONE_INCLUDE_FROM"] = ""
 os.environ["RCLONE_NO_UPDATE_DIR_MODTIME"] = "true"
 os.environ["RCLONE_NO_UPDATE_MODTIME"] = "true"
 
