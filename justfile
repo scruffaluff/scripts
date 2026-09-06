@@ -2,7 +2,9 @@
 #
 # For more information, visit https://just.systems.
 
-set windows-shell := ["powershell.exe", "-NoLogo", "-Command"]
+[windows]
+set shell := ["powershell.exe", "-NoLogo", "-Command"]
+
 export DENO_INSTALL_ROOT := justfile_directory() / ".vendor/lib/deno"
 export PATH := if os() == "windows" {
   join(justfile_directory(), ".vendor\\bin;") + join(justfile_directory(),

@@ -3,6 +3,9 @@
 # For more information, visit
 # https://docs.astral.sh/ty/configuration/.
 
+[environment]
+python-version = "3.11"
+
 [rules]
 unresolved-import = "ignore"
 
